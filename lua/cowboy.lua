@@ -28,12 +28,12 @@ local defaults = {
 ---@return boolean Always returns true to actively block the key sequence
 local function default_handler(key)
 	local phrases = {
-		"YEEEEE-HAWW 🤠",
 		"🤠 Hold it, Cowboy!",
-		"🐎 Get off the horse!"
+		"🐎 ENOUGH! Get off the horse!"
 	}
+	local chosen = phrases[math.random(#phrases)]
 	vim.notify(
-		phrases[math.random(#phrases)] .. '['..key..']',
+		chosen .. ' ['..key..']',
 		vim.log.levels.WARN,
 		{ title = "Key Lock" }
 )
@@ -45,7 +45,7 @@ end
 ---@return nil
 function M.toggle()
 	M.enabled = not M.enabled
-	local status = M.enabled and "Howdy, partner! let's go  " or "The horse ran quickly ↩"
+	local status = M.enabled and "Howdy, partner! let's go, YEEHAW!  " or "The horse ran quickly ↩"
 	vim.notify(status, vim.log.levels.WARN, {desc = "Toggles"})
 end
 

@@ -5,7 +5,6 @@
 - **Rate-limiting:** break your bad habits by throttling rapid, repetitive keypresses when they cross your designed threshold.
 - **Extensibility:** Organize your rules cleanly into semantic groups with ease, allowing multiple sets of keystrokes with different threshold and timeout.
 
-##
 ## Installation
 Use your favorite package manager, native Neovim's package manager as an example:
 
@@ -13,6 +12,7 @@ Use your favorite package manager, native Neovim's package manager as an example
 ```lua
 vim.pack.add({ src = "https://github.com/voyaqur/cowboy.nvim", name = "cowboy.nvim" })
 ```
+
 ## Configuration
 You can customize or extend the enforcement engine by defining distinct tracking rules inside the `groups` table. 
 

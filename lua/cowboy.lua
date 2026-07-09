@@ -11,15 +11,15 @@ local M = {}
 ---@field groups table<string, GroupConfig> Map of individual rate-limiting configurations grouped by name
 
 M.enabled = true
-local defaults={
+local defaults = {
 	enabled = true,
-		groups = {
-			navigation = {
-				keys = { "h", "j", "k", "l", "+", "-" },
-				threshold = 10,
-				timeout = 2000,
-			},
+	groups = {
+		navigation = {
+			keys = { "h", "j", "k", "l", "+", "-" },
+			threshold = 10,
+			timeout = 2000,
 		},
+	},
 
 }
 ---@type CowboyConfig
@@ -27,10 +27,16 @@ local defaults={
 ---@param key string The specific key sequence that was spammed
 ---@return boolean Always returns true to actively block the key sequence
 local function default_handler(key)
-	vim.api.nvim_echo({
-        { "🤠 Hold it Cowboy! ", "WarningMsg" },
-        { string.format("[%s]", key), "None" }
-    }, true, {})
+	local phrases = {
+		"YEEEEE-HAWW 🤠",
+		"🤠 Hold it, Cowboy!",
+		"🐎 Get off the horse!"
+	}
+	vim.notify(
+		string.format("%s %d", phrases[math.random(#phrases)] ,key),
+		vim.log.levels.WARN,
+		{ title = "Key Lock" }
+)
 
 	return true
 end
@@ -39,10 +45,8 @@ end
 ---@return nil
 function M.toggle()
 	M.enabled = not M.enabled
-	local status = M.enabled and "" or "↩"
-	vim.api.nvim_echo({
-        { "YEE-HAW!!!! " .. status, "InfoMsg" },
-    }, true, {})
+	local status = M.enabled and "Howdy, partner! let's go  " or "The horse ran quickly ↩"
+	vim.notify(status, vim.log.levels.WARN, {desc = "Toggles"})
 end
 
 ---Initializes the cowboy plugin, parses configurations, and sets up intercepted expression keymaps
@@ -54,7 +58,7 @@ function M.setup(opts)
 
 	vim.api.nvim_create_user_command("Yeehaw", function()
 		M.toggle()
-	end, { desc = "Toggle Cowboy anti-spam keymaps globally" })
+	end, { desc = nil })
 
 	for gName, group in pairs(config.groups) do
 		for _, key in ipairs(group.keys) do

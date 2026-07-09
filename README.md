@@ -35,7 +35,7 @@ require('cowboy').setup({
         },
     },
 })
-
+```
 ## Inspiration 
 While searching for plugins to improve my setup, fix niche things, I stumbled upon a code snippet (`discipline.nvim`) from [craftzdog/dotfiles-public](https://github.com/craftzdog/dotfiles-public). Hence it gave me an idea to make this plugin to carry something powerful that can break my bad habits within my personal Neovim workflow with ease.
 

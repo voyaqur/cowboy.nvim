@@ -33,7 +33,7 @@ local function default_handler(key)
 		"🐎 Get off the horse!"
 	}
 	vim.notify(
-		string.format("%s %d", phrases[math.random(#phrases)] ,key),
+		phrases[math.random(#phrases)] .. '['..key..']',
 		vim.log.levels.WARN,
 		{ title = "Key Lock" }
 )

@@ -18,6 +18,7 @@ local defaults = {
 			keys = { "h", "j", "k", "l", "+", "-" },
 			threshold = 10,
 			timeout = 2000,
+			betweenTime = 1000,
 		},
 	},
 
@@ -29,14 +30,15 @@ local defaults = {
 local function default_handler(key)
 	local phrases = {
 		"🤠 Hold it, Cowboy!",
-		"🐎 ENOUGH! Get off the horse!"
+		"🐎 ENOUGH! Get off the horse!",
+		"🌵 Whoa there! Slow down!",
 	}
 	local chosen = phrases[math.random(#phrases)]
 	vim.notify(
-		chosen .. ' ['..key..']',
+		chosen .. ' [' .. key .. ']',
 		vim.log.levels.WARN,
 		{ title = "Key Lock" }
-)
+	)
 
 	return true
 end
@@ -46,7 +48,7 @@ end
 function M.toggle()
 	M.enabled = not M.enabled
 	local status = M.enabled and "Howdy, partner! let's go, YEEHAW!  " or "The horse ran quickly ↩"
-	vim.notify(status, vim.log.levels.WARN, {desc = "Toggles"})
+	vim.notify(status, vim.log.levels.WARN, { desc = "Toggles" })
 end
 
 ---Initializes the cowboy plugin, parses configurations, and sets up intercepted expression keymaps
@@ -55,7 +57,6 @@ end
 function M.setup(opts)
 	local config = vim.tbl_deep_extend("force", defaults, opts or {})
 	M.enabled = config.enabled ~= false
-
 	vim.api.nvim_create_user_command("Yeehaw", function()
 		M.toggle()
 	end, { desc = nil })
@@ -64,7 +65,7 @@ function M.setup(opts)
 		for _, key in ipairs(group.keys) do
 			local count = 0
 			local timer = assert(vim.uv.new_timer())
-
+			local last = 0
 			vim.keymap.set("n", key, function()
 				if not M.enabled then
 					return key
@@ -74,7 +75,14 @@ function M.setup(opts)
 					count = 0
 					return key
 				end
-
+				local now = vim.uv.hrtime() / 1e6
+				local delta = now - last
+				last = now
+				if delta > (group.betweenTime or 150) then
+					count = 1
+				else
+					count = count + 1
+				end
 				if count >= group.threshold then
 					local block = true
 					if group.callback then
